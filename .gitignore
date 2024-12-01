@@ -39,4 +39,6 @@ yarn-error.log*
 # vercel
 .vercel
 
+# api
 service_account.json
+firebase.ts

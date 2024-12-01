@@ -1,6 +1,7 @@
 import Join from "../pages/Join";
 import CheckIn from "../pages/CheckIn";
 import HomePage from "../pages/Home";
+import ClassroomManager from "../pages/Dashboard";
 
 /**
  * TODO: Modify this constant to point to the URL of your backend.
@@ -34,10 +35,16 @@ export const PATHS: {
         bar: true,
         element: <Join />,
     },
+    // {
+    //     link: "/in",
+    //     label: "CheckIn",
+    //     bar: false,
+    //     element: <CheckIn />,
+    // },
     {
-        link: "/in",
-        label: "CheckIn",
-        bar: false,
-        element: <CheckIn />,
+        link: "myclasses",
+        label: "Classes",
+        bar: true,
+        element: <ClassroomManager />,
     },
 ];

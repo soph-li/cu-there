@@ -1,15 +1,14 @@
 import "../App.css";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { PATHS } from "../constants/Navigation";
+import tickImage from '../assets/tick.png';
 
 function Join() {
     const [searchClass, setSearchClass] = useState("");
     const [searchName, setSearchName] = useState("");
     const [emptyErrMessage, setEmptyErrMessage] = useState("");
     const [codeLenMessage, setCodeLenMessage] = useState("");
-    const [notFoundMessage, setNotFoundMessage] = useState("");
-    const navigate = useNavigate();
+    const [popupShown, setPopupShown] = useState(false);
+    let popup = document.getElementById("popup");
     
     const checkIn = () => {
 
@@ -28,10 +27,28 @@ function Join() {
         // clear the error if input is valid
         setEmptyErrMessage("");
         setCodeLenMessage("");
-        const checkInPath = PATHS.filter(path => path.label === "CheckIn")[0];
-        navigate(checkInPath.link);
-    }
+        
+        if (!popupShown) {
+            setPopupShown(true);
+            popup?.classList.add("open-popup");
+
+        }
+    };
+
+    const closePopUp = () => {
+        popup?.classList.remove("open-popup");
+        resetForm();
+    };
+
+    // reset state when details are reentered
+    const resetForm = () => {
+        setSearchClass("");
+        setSearchName("");
+        setPopupShown(false);
+    };
+
     return (
+        <>
         <div className='center'>
             <center>
                 <h2>join class here!</h2>
@@ -58,6 +75,13 @@ function Join() {
                 {codeLenMessage && <p style={{ color: "red" }}>{codeLenMessage}</p>}
             </center>
         </div>
+        <div className="popup" id="popup">
+            <img src={tickImage}/>
+            <h2>you're in!</h2>
+            <p>your details have successfully been submitted.</p>
+            <button type="button" onClick={closePopUp}>ok</button>
+        </div>
+        </>
     );
 };
 

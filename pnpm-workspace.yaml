@@ -2,3 +2,5 @@ packages:
     - "backend"
     - "frontend"
     - "lib/*"
+    - "lib/common"
+    - "lib/types"
