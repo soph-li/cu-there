@@ -64,6 +64,21 @@ app.get("/classrooms/:id", async (req, res) => {
     }
 });
 
+// fetch all classrooms
+app.get("/classrooms", async (_, res) => {
+    try {
+        const querySnapshot = await getDocs(collection(db, "classrooms"));
+        const classrooms = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        res.status(200).send(classrooms);
+    } catch (error) {
+        console.error("error fetching classrooms: ", error);
+        res.status(500).send({ error: "failed to fetch classrooms." });
+    }
+});
+
 // update a classroom by id
 app.put("/classrooms/:id", async (req, res) => {
     const classroomId = req.params.id;

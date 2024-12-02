@@ -1,6 +1,8 @@
 import "../App.css";
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import ClassForm from "../components/ClassForm";
+import ClassCard from "../components/ClassCard";
 
 let API_BASE_URL = "http://localhost:8080";
 
@@ -14,108 +16,65 @@ type Classroom = {
 };
 
 const ClassroomManager = () => {
-    const [classData, setClassData] = useState({
-        name: "",
-        instructor: "",
-        location: "",
-        description: "",
-    });
-    const [responseMessage, setResponseMessage] = useState("");
-    const [emptyErrMessage, setEmptyErrMessage] = useState("");
-    const [popupShown, setPopupShown] = useState(false);
+    const [classrooms, setClassrooms] = useState<Classroom[]>([]);
 
-    const popupRef = useRef<HTMLDivElement | null>(null);
+    // fetch all classrooms
+    useEffect(() => {
+        const fetchClasses = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/classrooms`);
+                setClassrooms(response.data);
+            } catch (error) {
+                console.error("Error fetching classrooms:", error);
+            }
+        };
+        fetchClasses();
+    }, []);
 
-    // handle input changes for the form
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setClassData((prev) => ({ ...prev, [name]: value }));
-    };
-
-    // open the popup and modify styles
-    const openCreateClass = () => {
-        resetForm();
-        setPopupShown(true);
-        if (popupRef.current) {
-            popupRef.current.style.display = "block"; // Show popup
-            popupRef.current.classList.add("open-popup-class"); // Add custom class
-        }
-    };
-
-    // Close the popup and modify styles
-    const closePopUp = () => {
-        setPopupShown(false);
-        if (popupRef.current) {
-            popupRef.current.style.display = "none"; // Hide popup
-            popupRef.current.classList.remove("open-popup-class"); // Remove custom class
-        }
-    };
-
-    // Reset form data
-    const resetForm = () => {
-        setClassData({
-            name: "",
-            instructor: "",
-            location: "",
-            description: "",
-        });
-        setEmptyErrMessage("");
-    };
-
-    // Submit the form
-    const createClass = async () => {
-        if (!classData.name || !classData.instructor || !classData.location || !classData.description) {
-            setEmptyErrMessage("all fields are required!");
-            return;
-        }
-
-        setEmptyErrMessage("");
+    // handle delete
+    const handleDelete = async (id: string) => {
         try {
-            const response = await axios.post(`${API_BASE_URL}/classrooms`, classData);
-            setResponseMessage(`classroom created with id: ${response.data.id}`);
-            closePopUp();
+            await axios.delete(`${API_BASE_URL}/classrooms/${id}`);
+            setClassrooms(classrooms.filter((classroom) => classroom.id !== id));
         } catch (error) {
-            setResponseMessage("failed to create classroom");
+            console.error("Error deleting classroom:", error);
+        }
+    };
+
+    // handle update
+    const handleUpdate = async (id: string) => {
+        const updatedData = { name: "Updated Name" }; // Example update
+        try {
+            await axios.put(`${API_BASE_URL}/classrooms/${id}`, updatedData, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            setClassrooms((prev) =>
+                prev.map((classroom) =>
+                    classroom.id === id ? { ...classroom, ...updatedData } : classroom
+                )
+            );
+        } catch (error) {
+            console.error("Error updating classroom:", error);
         }
     };
 
     return (
-        <div className="center_top">
-            <button onClick={openCreateClass}>create new class</button>
-            <div ref={popupRef} className="popup" style={{ display: "none" }}>
-                <h2>new class details</h2>
-                <input
-                    name="name"
-                    placeholder="class name"
-                    value={classData.name}
-                    onChange={handleInputChange}
-                />
-                <input
-                    name="instructor"
-                    placeholder="instructor"
-                    value={classData.instructor}
-                    onChange={handleInputChange}
-                />
-                <input
-                    name="location"
-                    placeholder="location"
-                    value={classData.location}
-                    onChange={handleInputChange}
-                />
-                <input
-                    name="description"
-                    placeholder="description"
-                    value={classData.description}
-                    onChange={handleInputChange}
-                />
-                <p/>
-                <button onClick={createClass}>create class</button>
-                {emptyErrMessage && <div style={{ color: "red" }}>{emptyErrMessage}</div>}
-                <button onClick={closePopUp}>close</button>
+        <>
+            <div className='center-bot'><ClassForm /></div>
+            <div className="grid-container">
+                {classrooms.map((classroom) => (
+                    <ClassCard
+                        key={classroom.id}
+                        classroom={classroom}
+                        onDelete={handleDelete}
+                        onUpdate={handleUpdate}
+                    />
+                ))}
             </div>
-        </div>
+        </>
     );
 };
 
 export default ClassroomManager;
-
