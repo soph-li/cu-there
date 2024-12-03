@@ -17,6 +17,7 @@ function HomePage() {
                     <h1>CU There</h1>
                     <p>attendance tracking, made easy</p>
                     <button onClick={goToJoin}>join class!</button>
+                    <br/>
                 </center>
             </div>
         </>

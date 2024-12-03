@@ -8,24 +8,20 @@ import {
     rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { ArrowUpCircle } from "lucide-react";
+import { CalendarHeart } from "lucide-react";
 import { Link } from "react-router-dom";
+import SignInWithGoogle from "../auth/SignInWithGoogle";
+import "../App.css";
 
 const useStyles = createStyles((theme) => ({
-    // header: {
-    //     display: "flex",
-    //     justifyContent: "start",
-    //     gap: "2rem",
-    //     alignItems: "center",
-    //     height: "100%", 
-    // },
     header: {
         position: "fixed", 
         top: 50,   
-        justifyContent: "start",
+        justifyContent: "space-between",
         display: "flex",
         alignItems: "center",
-        height: "0%", // Set the height of the header
+        width: "100%",
+        height: 0,
         gap: "2rem",
         zIndex: 10,
     },
@@ -104,7 +100,7 @@ export function HeaderSimple({ links }: HeaderSimpleProps) {
     return (
         <Header height={60}>
             <Container className={classes.header}>
-                <ArrowUpCircle size={28} />
+                <CalendarHeart size={28} />
                 <Group spacing={5} className={classes.links}>
                     {items}
                 </Group>
@@ -114,6 +110,9 @@ export function HeaderSimple({ links }: HeaderSimpleProps) {
                     className={classes.burger}
                     size='sm'
                 />
+                <div style={{ marginLeft: "auto" }}>
+                    <SignInWithGoogle/>
+                </div>
             </Container>
         </Header>
     );

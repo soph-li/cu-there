@@ -231,3 +231,20 @@
     box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);
 
   }
+
+  .sign-in button {
+    font-size: 15px;
+    box-shadow: none;
+    color:#555;
+    font-family: inherit;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    background-color: rgb(255, 243, 243);
+    line-height: 1;
+    margin: 0;
+  }
+
+  .sign-in button:hover {
+    box-shadow: none;
+    background-color: rgb(255, 235, 235);
+  }

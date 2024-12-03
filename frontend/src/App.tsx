@@ -21,8 +21,10 @@ const router = createBrowserRouter([
 
 export default function App() {
     return (
-        <MantineProvider withGlobalStyles withNormalizeCSS>
+        <>
+            <MantineProvider withGlobalStyles withNormalizeCSS>
             <RouterProvider router={router} />
-        </MantineProvider>
+            </MantineProvider>
+        </>
     );
 }
