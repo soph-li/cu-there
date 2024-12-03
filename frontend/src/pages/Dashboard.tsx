@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ClassForm from "../components/ClassForm";
 import ClassCard from "../components/ClassCard";
+import UpdateForm from "../components/UpdateForm";
 
 let API_BASE_URL = "http://localhost:8080";
 
@@ -15,8 +16,9 @@ type Classroom = {
     code?: string;
 };
 
-const ClassroomManager = () => {
+const Dashboard = () => {
     const [classrooms, setClassrooms] = useState<Classroom[]>([]);
+    const [editingId, setEditingId] = useState<string | null>(null);
 
     // fetch all classrooms
     useEffect(() => {
@@ -25,7 +27,7 @@ const ClassroomManager = () => {
                 const response = await axios.get(`${API_BASE_URL}/classrooms`);
                 setClassrooms(response.data);
             } catch (error) {
-                console.error("Error fetching classrooms:", error);
+                console.error("error fetching classrooms:", error);
             }
         };
         fetchClasses();
@@ -37,27 +39,19 @@ const ClassroomManager = () => {
             await axios.delete(`${API_BASE_URL}/classrooms/${id}`);
             setClassrooms(classrooms.filter((classroom) => classroom.id !== id));
         } catch (error) {
-            console.error("Error deleting classroom:", error);
+            console.error("error deleting classroom:", error);
         }
     };
 
-    // handle update
-    const handleUpdate = async (id: string) => {
-        const updatedData = { name: "Updated Name" }; // Example update
-        try {
-            await axios.put(`${API_BASE_URL}/classrooms/${id}`, updatedData, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            setClassrooms((prev) =>
-                prev.map((classroom) =>
-                    classroom.id === id ? { ...classroom, ...updatedData } : classroom
-                )
-            );
-        } catch (error) {
-            console.error("Error updating classroom:", error);
-        }
+    // handle edit
+    const handleEditClick = (id: string) => {
+        setEditingId(id);
+    };
+
+    const handleUpdateSuccess = (updatedData: Classroom) => {
+        setClassrooms((prev) =>
+            prev.map((classroom) => classroom.id === updatedData.id ? updatedData : classroom)
+        );
     };
 
     return (
@@ -65,13 +59,20 @@ const ClassroomManager = () => {
             <div className='button-container'>
                 <ClassForm />
             </div>
+            {editingId && (
+                <UpdateForm
+                    id={editingId}
+                    onClose={() => setEditingId(null)} 
+                    onUpdateSuccess={handleUpdateSuccess}
+                />
+            )}
             <div className="grid-container">
                 {classrooms.map((classroom) => (
                     <ClassCard
                         key={classroom.id}
                         classroom={classroom}
                         onDelete={handleDelete}
-                        onUpdate={handleUpdate}
+                        onEdit={handleEditClick}
                     />
                 ))}
             </div>
@@ -79,4 +80,4 @@ const ClassroomManager = () => {
     );
 };
 
-export default ClassroomManager;
+export default Dashboard;

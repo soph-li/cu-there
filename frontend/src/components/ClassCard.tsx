@@ -11,12 +11,22 @@ type Classroom = {
 
 interface ClassCardProps {
     classroom: Classroom;
+    onEdit: (id: string) => void
     onDelete: (id: string) => void;
-    onUpdate: (id: string) => void;
 }
 
-const ClassCard: React.FC<ClassCardProps> = ({ classroom, onDelete, onUpdate }) => {
+const ClassCard: React.FC<ClassCardProps> = ({ classroom, onEdit, onDelete }) => {
     const [isFlipped, setIsFlipped] = useState(false);
+
+    const handleEditClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onEdit(classroom.id);
+    }
+
+    const handleDeleteClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onDelete(classroom.id);
+    }
 
     return (
         <div
@@ -33,9 +43,9 @@ const ClassCard: React.FC<ClassCardProps> = ({ classroom, onDelete, onUpdate }) 
 
                 {/* back of the card */}
                 <div className="card-back">
-                    <button onClick={() => onUpdate(classroom.id)}>update</button>
+                    <button onClick={handleEditClick}>edit</button>
                     <p/>
-                    <button onClick={() => onDelete(classroom.id)}>delete</button>
+                    <button onClick={handleDeleteClick}>delete</button>
                 </div>
             </div>
         </div>
