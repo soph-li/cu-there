@@ -62,7 +62,9 @@ const ClassroomManager = () => {
 
     return (
         <>
-            <div className='center-bot'><ClassForm /></div>
+            <div className='button-container'>
+                <ClassForm />
+            </div>
             <div className="grid-container">
                 {classrooms.map((classroom) => (
                     <ClassCard

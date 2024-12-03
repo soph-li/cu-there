@@ -71,7 +71,7 @@
     width: 400px;
     background: #ffeeee;
     border-radius: 6px;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.1);
@@ -112,14 +112,13 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 10px;
     padding: 10px;
-    
   }
 
   .card {
     perspective: 1000px;
     width: 350px;
-    height: 300px;
-    margin: 20px;
+    height: 250px;
+    margin: 0px;
   }
 
   .card-inner {
@@ -163,12 +162,16 @@
     text-align: center;
     font-size: 1.2em;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
+  }
+
+  .card-front p {
+    margin-top: 0px;
   }
 
   /* style for the class name (centered) */
   .card-front .class-name {
-    font-size: 1.0em; /* Larger text for class name */
+    font-size: 1.0em;
     font-weight: bold;
     margin-bottom: 10px;
     text-align: center;
@@ -176,18 +179,25 @@
 
   /* style for instructor and location */
   .card-front .class-info {
-    font-size: 1.0em; /* Slightly smaller than class name */
-    color: #555; /* Lighter color for less emphasis */
-    margin-bottom: 15px;
+    font-size: 1.0em; 
+    color: #555;
+    margin-bottom: 10px;
     text-align: center;
   }
 
   /* style for description */
   .card-front .description {
     font-size: 0.8em;
-    color: #333;
+    color: #555;
     line-height: 1.0;
     text-align: center;
   }
 
-
+  .button-container {
+    position: sticky;
+    top: 0; 
+    left: 0;
+    z-index: 5;
+    margin: 10px;
+    text-align: left;
+}

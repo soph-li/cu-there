@@ -29,7 +29,7 @@ const ClassForm = () => {
             popupRef.current.style.display = "block";
             setTimeout(() => {
                 popupRef.current?.classList.add("open-popup"); // Add animation class
-            }, 6); // Small delay ensures browser renders visibility before animation
+            }, 6); // small delay ensures browser renders visibility before animation
         }
     };
 
@@ -41,7 +41,7 @@ const ClassForm = () => {
         }
     };
 
-    // Reset form data
+    // reset form data
     const resetForm = () => {
         setClassData({
             name: "",
@@ -70,8 +70,8 @@ const ClassForm = () => {
     };
 
     return (
-        <div>
-            <p/>
+        <>
+            <br/>
             <button onClick={openCreateClass}>create new class</button>
             <div ref={popupRef} className="popup" id="popup">
                 <h2>new class details</h2>
@@ -104,7 +104,7 @@ const ClassForm = () => {
                 {emptyErrMessage && <div style={{ color: "red" }}>{emptyErrMessage}</div>}
                 <button onClick={closePopUp}>close</button>
             </div>
-        </div>
+        </>
     );
 };
 
