@@ -79,6 +79,7 @@ const Dashboard = () => {
             <div className='form-container'>
                 <ClassForm />
             </div>
+            <br/>
             <div className='grid-container'>
                 {classrooms.map((classroom) => (
                     <ClassCard
