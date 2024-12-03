@@ -12,12 +12,22 @@ import { ArrowUpCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
+    // header: {
+    //     display: "flex",
+    //     justifyContent: "start",
+    //     gap: "2rem",
+    //     alignItems: "center",
+    //     height: "100%", 
+    // },
     header: {
-        display: "flex",
+        position: "fixed", 
+        top: 50,   
         justifyContent: "start",
-        gap: "2rem",
+        display: "flex",
         alignItems: "center",
-        height: "100%",
+        height: "0%", // Set the height of the header
+        gap: "2rem",
+        zIndex: 10,
     },
 
     links: {

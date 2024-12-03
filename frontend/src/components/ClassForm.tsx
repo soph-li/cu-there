@@ -13,6 +13,8 @@ const ClassForm = () => {
     });
     const [responseMessage, setResponseMessage] = useState("");
     const [emptyErrMessage, setEmptyErrMessage] = useState("");
+    const [showDeleteWarn, setShowDeleteWarn] = useState(false);
+
 
     const popupRef = useRef<HTMLDivElement | null>(null);
 
