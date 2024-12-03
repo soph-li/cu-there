@@ -4,6 +4,7 @@ import axios from "axios";
 import ClassForm from "../components/ClassForm";
 import ClassCard from "../components/ClassCard";
 import UpdateForm from "../components/UpdateForm";
+import ProtectedRoute from "../auth/ProtectedRoute";
 
 let API_BASE_URL = "http://localhost:8080";
 
@@ -76,6 +77,7 @@ const Dashboard = () => {
 
     return (
         <>
+            <ProtectedRoute>
             <div className='form-container'>
                 <ClassForm />
             </div>
@@ -106,6 +108,7 @@ const Dashboard = () => {
                     <button onClick={handleCancelDel}>no</button>
                 </div>
             )}
+            </ProtectedRoute>
         </>
     );
 };
