@@ -133,7 +133,6 @@ app.post('/attendance', async (req, res) => {
     }
 });
 
-
 app.delete('/attendance/:id', async (req, res) => {
     const attendId = req.params.id;
     try {
@@ -143,14 +142,29 @@ app.delete('/attendance/:id', async (req, res) => {
 
         const docSnap = await getDoc(docRef);
         if (!docSnap.exists()) {
-            return res.status(404).send({ error: "Document not found" });
+            return res.status(404).send({ error: "document not found" });
         }
 
         await deleteDoc(docRef);
-        res.status(200).send({ message: "Attendance stopped successfully" });
+        res.status(200).send({ message: "attendance stopped successfully" });
     } catch (error) {
-        console.error("Error deleting attendance:", error);
-        res.status(500).send({ error: "Failed to stop attendance" });
+        console.error("error deleting attendance: ", error);
+        res.status(500).send({ error: "failed to stop attendance" });
+    }
+});
+
+// fetch all attendance codes that exist rn
+app.get("/attendance", async (_, res) => {
+    try {
+        const querySnapshot = await getDocs(collection(db, "attendance"));
+        const codes = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        res.status(200).send(codes);
+    } catch (error) {
+        console.error("error fetching codes: ", error);
+        res.status(500).send({ error: "failed to fetch codes." });
     }
 });
 
