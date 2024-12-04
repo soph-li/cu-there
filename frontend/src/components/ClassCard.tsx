@@ -43,9 +43,9 @@ const ClassCard: React.FC<ClassCardProps> = ({ classroom, onEdit, onDelete }) =>
 
                 {/* back of the card */}
                 <div className="card-back">
-                    <button onClick={handleEditClick}>edit</button>
-                    <p/>
-                    <button onClick={handleDeleteClick}>delete</button>
+                    <button onClick={handleEditClick}>✏️ edit</button>
+                    <br/>
+                    <button onClick={handleDeleteClick}>🗑️ delete</button>
                 </div>
             </div>
         </div>

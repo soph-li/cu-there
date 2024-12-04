@@ -1,6 +1,8 @@
 import "../App.css";
 import { useState, useRef } from "react";
 import axios from "axios";
+import { auth } from "../../../backend/firebase";
+
 
 let API_BASE_URL = "http://localhost:8080";
 
@@ -13,8 +15,6 @@ const ClassForm = () => {
     });
     const [responseMessage, setResponseMessage] = useState("");
     const [emptyErrMessage, setEmptyErrMessage] = useState("");
-    const [showDeleteWarn, setShowDeleteWarn] = useState(false);
-
 
     const popupRef = useRef<HTMLDivElement | null>(null);
 
@@ -30,7 +30,7 @@ const ClassForm = () => {
         if (popupRef.current) {
             popupRef.current.style.display = "block";
             setTimeout(() => {
-                popupRef.current?.classList.add("open-popup"); // Add animation class
+                popupRef.current?.classList.add("open-popup"); 
             }, 6); // small delay ensures browser renders visibility before animation
         }
     };
@@ -54,7 +54,7 @@ const ClassForm = () => {
         setEmptyErrMessage("");
     };
 
-    // submit the form
+    // submit the form and create class
     const createClass = async () => {
         if (!classData.name || !classData.instructor || !classData.location || !classData.description) {
             setEmptyErrMessage("all fields are required!");
@@ -62,8 +62,15 @@ const ClassForm = () => {
         }
 
         setEmptyErrMessage("");
+
+        const user = auth.currentUser;
+        if (!user) {
+            setResponseMessage("User is not authenticated.");
+            return;
+        }
+        const userId = user.uid;
         try {
-            const response = await axios.post(`${API_BASE_URL}/classrooms`, classData);
+            const response = await axios.post(`${API_BASE_URL}/classrooms`, { ...classData, userId });
             setResponseMessage(`classroom created with id: ${response.data.id}`);
             closePopUp();
         } catch (error) {

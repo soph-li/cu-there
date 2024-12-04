@@ -1,10 +1,14 @@
-import path from "path";
 import express, { Express } from "express";
 import cors from "cors";
-import fetch from "node-fetch";
 import { db } from './firebase';
 import {doc, addDoc, collection, updateDoc, deleteDoc, getDocs, getFirestore, getDoc} from 'firebase/firestore';
+import * as admin from 'firebase-admin';
 
+// initialize Firebase Admin SDK
+admin.initializeApp({
+    credential: admin.credential.applicationDefault(), // This uses the default service account key
+  });
+  
 const app: Express = express();
 const hostname = "0.0.0.0";
 const port = 8080;
@@ -22,10 +26,11 @@ type AttendanceRecords = {
 }
 
 type Classroom = {
+    userId: string;
     name: string;
-    id: number;
-    description?: string;
-    location?: string;
+    classId: string;
+    description: string;
+    location: string;
     instructor: string;
     code: string;
     students: string[];
@@ -34,10 +39,13 @@ type Classroom = {
 
 // add a new classroom
 app.post("/classrooms", async (req, res) => {
-    const classroomData = req.body;
+    const { userId, ...classroomData} = req.body;
+    if (!userId) {
+        return res.status(400).send({ error: "userId required."});
+    }
 
     try {
-        const docRef = await addDoc(collection(db, "classrooms"), classroomData);
+        const docRef = await addDoc(collection(db, "classrooms"), { userId, ...classroomData});
         res.status(201).send({ id: docRef.id, ...classroomData });
     } catch (error) {
         console.error("error creating classroom: ", error);

@@ -5,6 +5,7 @@ import ClassForm from "../components/ClassForm";
 import ClassCard from "../components/ClassCard";
 import UpdateForm from "../components/UpdateForm";
 import ProtectedRoute from "../auth/ProtectedRoute";
+import { auth } from "../../../backend/firebase";
 
 let API_BASE_URL = "http://localhost:8080";
 
@@ -15,6 +16,7 @@ type Classroom = {
     location: string;
     description: string;
     code?: string;
+    userId: string;
 };
 
 const Dashboard = () => {
@@ -27,14 +29,30 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchClasses = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/classrooms`);
-                setClassrooms(response.data);
+                const user = auth.currentUser;
+                if (user) {
+                    // fetch ID token
+                    const idToken = await user.getIdToken();
+                    const response = await axios.get(`${API_BASE_URL}/classrooms`, {
+                        headers: {
+                            Authorization: `Bearer ${idToken}`,
+                        },
+                    });
+
+                    // filter classes based on uid
+                    const myClassrooms = response.data.filter((classroom: Classroom) => 
+                        classroom.userId === user.uid);
+                    setClassrooms(myClassrooms);
+                } else {
+                    console.error("user is not authenticated");
+                }
             } catch (error) {
                 console.error("error fetching classrooms:", error);
             }
         };
+    
         fetchClasses();
-    }, []);
+    }, []); 
 
     // handle edit
     const handleEditClick = (id: string) => {
@@ -83,14 +101,18 @@ const Dashboard = () => {
             </div>
             <br/>
             <div className='grid-container'>
-                {classrooms.map((classroom) => (
+                {classrooms.length > 0 ? (classrooms.map((classroom) => (
                     <ClassCard
                         key={classroom.id}
                         classroom={classroom}
                         onDelete={handleDeleteClick}
                         onEdit={handleEditClick}
                     />
-                ))}
+                ))) : (
+                    <div className='center'>
+                        <p>you don't have any classes yet! 😡</p>
+                    </div>
+                )}
             </div>
             
             {editingId && (
