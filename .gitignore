@@ -41,4 +41,4 @@ yarn-error.log*
 
 # api
 service_account.json
-firebase.ts
+backend/firebase.ts

@@ -1,5 +1,6 @@
 import "../App.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type Classroom = {
     id: string;
@@ -11,12 +12,18 @@ type Classroom = {
 
 interface ClassCardProps {
     classroom: Classroom;
-    onEdit: (id: string) => void
+    onManage: (id: string) => void;
+    onEdit: (id: string) => void;
     onDelete: (id: string) => void;
 }
 
-const ClassCard: React.FC<ClassCardProps> = ({ classroom, onEdit, onDelete }) => {
+const ClassCard: React.FC<ClassCardProps> = ({ classroom, onManage, onEdit, onDelete }) => {
     const [isFlipped, setIsFlipped] = useState(false);
+    const navigate = useNavigate();
+
+    const handleManageClick = () => {
+        navigate(`class/${classroom.id}`, {state: {classroom}} );
+    }
 
     const handleEditClick = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -43,8 +50,8 @@ const ClassCard: React.FC<ClassCardProps> = ({ classroom, onEdit, onDelete }) =>
 
                 {/* back of the card */}
                 <div className="card-back">
+                    <button onClick={handleManageClick}>🫨 manage</button>
                     <button onClick={handleEditClick}>✏️ edit</button>
-                    <br/>
                     <button onClick={handleDeleteClick}>🗑️ delete</button>
                 </div>
             </div>

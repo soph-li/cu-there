@@ -37,6 +37,7 @@ type Classroom = {
     attendanceRecords: AttendanceRecords;
 };
 
+/* class */
 // add a new classroom
 app.post("/classrooms", async (req, res) => {
     const { userId, ...classroomData} = req.body;
@@ -115,6 +116,44 @@ app.delete("/classrooms/:id", async (req, res) => {
         res.status(500).send({ error: "failed to delete classroom." });
     }
 });
+
+app.post('/attendance', async (req, res) => {
+    const { classId, code } = req.body;
+
+    try {
+        const docRef = await addDoc(collection(db, "attendance"), {
+            classId,
+            code,
+        });
+        console.log("attendance created with id: ", docRef.id);
+        res.status(201).send({ id: docRef.id }); // return the document ID
+    } catch (error) {
+        console.error("error creating attendance document: ", error);
+        res.status(500).send({ error: "failed to start attendance" });
+    }
+});
+
+
+app.delete('/attendance/:id', async (req, res) => {
+    const attendId = req.params.id;
+    try {
+        console.log(attendId);
+        const docRef = doc(db, "attendance", attendId);
+        console.log("Deleting document at path:", docRef.path);
+
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+            return res.status(404).send({ error: "Document not found" });
+        }
+
+        await deleteDoc(docRef);
+        res.status(200).send({ message: "Attendance stopped successfully" });
+    } catch (error) {
+        console.error("Error deleting attendance:", error);
+        res.status(500).send({ error: "Failed to stop attendance" });
+    }
+});
+
 
 app.listen(port, hostname, () => {
     console.log(`Server listening on port ${port}`);

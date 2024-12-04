@@ -21,6 +21,7 @@ type Classroom = {
 
 const Dashboard = () => {
     const [classrooms, setClassrooms] = useState<Classroom[]>([]);
+    const [managingId, setManagingId] = useState<string | null>(null);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [showDeleteWarn, setShowDeleteWarn] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -54,6 +55,11 @@ const Dashboard = () => {
         fetchClasses();
     }, []); 
 
+    // handle manage wowee
+    const handleManageClick = (id: string) => {
+        setManagingId(id);
+    }
+
     // handle edit
     const handleEditClick = (id: string) => {
         setEditingId(id);
@@ -69,7 +75,7 @@ const Dashboard = () => {
     const handleDelete = async (id: string) => {
         try {
             await axios.delete(`${API_BASE_URL}/classrooms/${id}`);
-            setClassrooms(classrooms.filter((classroom) => classroom.id !== id));
+            setClassrooms(classrooms.filter((classroom) => classroom.classid !== id));
             setShowDeleteWarn(false);
             setDeletingId(null);
         } catch (error) {
@@ -105,8 +111,9 @@ const Dashboard = () => {
                     <ClassCard
                         key={classroom.id}
                         classroom={classroom}
-                        onDelete={handleDeleteClick}
+                        onManage={handleManageClick}
                         onEdit={handleEditClick}
+                        onDelete={handleDeleteClick}
                     />
                 ))) : (
                     <div className='center'>
