@@ -78,12 +78,18 @@ const ClassPage = () => {
         <>
             <div>
                 {classroom && (
-                    <div className='center-top'>
-                        <button onClick={handleStartAttendance}>start</button>
-                        <button onClick={handleStopAttendance}>stop</button>
-                        <h2>{classroom.name}</h2>
-                        {code && <h1>{code}</h1>} 
-                    </div>
+                    <>
+                        <div className='center-top'>
+                            <button onClick={handleStartAttendance}>start</button>
+                            <button onClick={handleStopAttendance}>stop</button>
+                            <h2>{classroom.name}</h2>
+                        </div>
+                        <div className='center'>
+                            <div className='typewriter'>
+                                {code && <h1>{code}</h1>}
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
         </>
